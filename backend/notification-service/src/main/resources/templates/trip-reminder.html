@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Trip Reminder - TripGennie</title>
+  <style>
+    /* Reset styles */
+    body, p, h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* Main container */
+    .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header section */
+    .header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .header h1 {
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 18px;
+    }
+
+    .countdown {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 15px 25px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    /* Content section */
+    .content {
+        padding: 40px 30px;
+        background-color: #ffffff;
+    }
+
+    .content h2 {
+        color: #333333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .content p {
+        color: #666666;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    /* Reminder box */
+    .reminder-box {
+        background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%);
+        border-left: 4px solid #f5576c;
+        padding: 25px;
+        margin: 30px 0;
+        border-radius: 0 12px 12px 0;
+    }
+
+    .reminder-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #f5576c;
+        margin-bottom: 15px;
+    }
+
+    /* Checklist */
+    .checklist {
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+    }
+
+    .checklist h3 {
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f093fb;
+        padding-bottom: 10px;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .checklist-item:last-child {
+        border-bottom: none;
+    }
+
+    .checklist-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f093fb;
+        border-radius: 4px;
+        margin-right: 15px;
+        background-color: white;
+    }
+
+    .checklist-text {
+        color: #666;
+        font-size: 16px;
+    }
+
+    /* Weather widget */
+    .weather-widget {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        color: white;
+    }
+
+    .weather-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .weather-city {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .weather-temp {
+        font-size: 36px;
+        font-weight: 700;
+    }
+
+    .weather-detail {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .weather-detail-item {
+        text-align: center;
+    }
+
+    .weather-detail-label {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .weather-detail-value {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* Tips section */
+    .tips-section {
+        background-color: #f0f9ff;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+    }
+
+    .tip-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tip-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .tip-content {
+        display: inline-block;
+        vertical-align: middle;
+        width: calc(100% - 50px);
+    }
+
+    /* Document checklist */
+    .documents {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 30px 0;
+    }
+
+    .document-item {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .document-icon {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .document-name {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .document-status {
+        color: #f5576c;
+        font-size: 12px;
+    }
+
+    /* Button */
+    .button {
+        display: inline-block;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(240, 147, 251, 0.4);
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #f8f9fa;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .documents {
+            grid-template-columns: 1fr;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .countdown {
+            font-size: 20px;
+        }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 20px; background-color: #f4f4f7; font-family: 'Segoe UI', Arial, sans-serif;">
+<div class="email-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>⏰ Trip Reminder!</h1>
+    <p>Your adventure is just around the corner</p>
+    <div class="countdown" th:text="|${daysUntilTrip} days to go!|">3 days to go!</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>Hello <span th:text="${userName}">User</span>!</h2>
+
+    <p>Your trip to <strong th:text="${destination}">Paris</strong> is approaching! We've put together a handy checklist and some tips to help you prepare.</p>
+
+    <!-- Reminder Box -->
+    <div class="reminder-box">
+      <div class="reminder-title">🎯 Trip Summary</div>
+      <p style="margin: 10px 0;"><strong>Destination:</strong> <span th:text="${destination}">Paris, France</span></p>
+      <p style="margin: 10px 0;"><strong>Dates:</strong> <span th:text="${#temporals.format(startDate, 'dd MMM')} + ' - ' + ${#temporals.format(endDate, 'dd MMM yyyy')}">01 Jun - 07 Jun 2024</span></p>
+      <p style="margin: 10px 0;"><strong>Hotel:</strong> <span th:text="${hotelName}">Grand Paris Hotel</span></p>
+      <p style="margin: 10px 0;"><strong>Booking Reference:</strong> <span th:text="${bookingReference}">BK-12345</span></p>
+    </div>
+
+    <!-- Weather Forecast -->
+    <div class="weather-widget">
+      <div class="weather-header">
+        <span class="weather-city" th:text="${destination}">Paris</span>
+        <span class="weather-temp" th:text="${weather.temperature} + '°C'">24°C</span>
+      </div>
+      <div style="text-align: center; margin-bottom: 20px;" th:text="${weather.condition}">Sunny with clouds</div>
+      <div class="weather-detail">
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Humidity</div>
+          <div class="weather-detail-value" th:text="${weather.humidity} + '%'">65%</div>
+        </div>
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Wind</div>
+          <div class="weather-detail-value" th:text="${weather.windSpeed} + ' km/h'">15 km/h</div>
+        </div>
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Rain</div>
+          <div class="weather-detail-value" th:text="${weather.precipitation} + '%'">10%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Packing Checklist -->
+    <div class="checklist">
+      <h3>🧳 Packing Checklist</h3>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Passport and visa (if required)</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Travel insurance documents</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Flight tickets and boarding passes</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Hotel booking confirmations</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Credit cards and local currency</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Phone charger and power adapter</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Weather-appropriate clothing</span>
+      </div>
+      <div class="checklist-item">
+        <div class="checklist-checkbox"></div>
+        <span class="checklist-text">Essential medications</span>
+      </div>
+    </div>
+
+    <!-- Essential Documents -->
+    <h3>📋 Essential Documents</h3>
+    <div class="documents">
+      <div class="document-item">
+        <div class="document-icon">🛂</div>
+        <div class="document-name">Passport</div>
+        <div class="document-status" th:text="${passportValid ? '✓ Valid' : '⚠ Check expiry'}">✓ Valid</div>
+      </div>
+      <div class="document-item">
+        <div class="document-icon">✈️</div>
+        <div class="document-name">Flight Ticket</div>
+        <div class="document-status">✓ Ready</div>
+      </div>
+      <div class="document-item">
+        <div class="document-icon">🏨</div>
+        <div class="document-name">Hotel Voucher</div>
+        <div class="document-status">✓ Confirmed</div>
+      </div>
+      <div class="document-item">
+        <div class="document-icon">💊</div>
+        <div class="document-name">Insurance</div>
+        <div class="document-status" th:text="${insuranceValid ? '✓ Active' : '⚠ Check'}">✓ Active</div>
+      </div>
+    </div>
+
+    <!-- Local Tips -->
+    <div class="tips-section">
+      <h3 style="margin-bottom: 20px;">💡 Local Tips for <span th:text="${destination}">Paris</span></h3>
+
+      <div class="tip-card">
+        <span class="tip-icon">🚇</span>
+        <span class="tip-content">Get a public transport pass for unlimited travel - saves money and time!</span>
+      </div>
+
+      <div class="tip-card">
+        <span class="tip-icon">🍽️</span>
+        <span class="tip-content">Try local restaurants away from tourist spots for authentic food at better prices.</span>
+      </div>
+
+      <div class="tip-card">
+        <span class="tip-icon">💬</span>
+        <span class="tip-content">Learn a few basic phrases in the local language - locals appreciate the effort!</span>
+      </div>
+
+      <div class="tip-card">
+        <span class="tip-icon">💰</span>
+        <span class="tip-content">Inform your bank about travel to avoid card blocks. Carry some local cash.</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center;">
+      <a href="https://tripgennie.com/trip/${tripId}/checklist" class="button">View Full Checklist</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Safe travels and have a wonderful trip!</p>
+    <p>© <span th:text="${currentYear}">2024</span> TripGennie</p>
+    <p style="font-size: 12px; color: #999;">
+      Need help? Contact us 24/7 at <a href="tel:+1234567890">+1 (234) 567-890</a><br>
+      Email: <a href="mailto:support@tripgennie.com">support@tripgennie.com</a>
+    </p>
+  </div>
+</div>
+</body>
+</html>
